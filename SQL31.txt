@@ -1,0 +1,123 @@
+1. 
+
+CREATE TABLE Students (
+Id INTEGER PRIMARY KEY AUTOINCREMENT,
+Name TEXT NOT NULL ,
+Age INT,
+Address_city TEXT ,
+classId INT,
+VIP TEXT,
+FOREIGN KEY(classId) REFERENCES Class(Id));
+
+CREATE TABLE Class (
+Id INTEGER PRIMARY KEY AUTOINCREMENT,
+Name TEXT  ,
+Code INT UNIQUE,
+Number_Of_Students INT ,
+Nunmber_Of_VIP INT,
+Age_Average INT,
+Most_Popular_City TEXT,
+Oldest_ViP TEXT,
+Youngest_VIP TEXT)
+
+2.
+
+INSERT INTO Class(Name,Code) VALUES("frst_grade", 345);
+INSERT INTO Class (Name,Code) VALUES("seconed_grade", 315);
+
+3.
+
+INSERT INTO Students(name,Age,Address_city,classId,VIP) VALUES("yosi bark", 7,"tel_aviv",1,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("yosi gal", 7,"tel_aviv",1,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("yosi chon", 7,"tel_aviv",1,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("dan bark", 8,"tel_aviv",1,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("ran bark", 7,"tel_aviv",1,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("rona bark", 7,"tel_aviv",1,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("galit bark", 6,"tel_aviv",1,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("tal bark", 6,"tel_aviv",1,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("li bark", 6,"tel_aviv",1,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("lital bark", 6,"tel_aviv",1,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("yosi levi", 7,"afola",1,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("yosi bark", 7,"afola",1,"no");
+
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("yosi bark", 8,"tel_aviv",2,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("yosi gal", 8,"tel_aviv",2,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("yosi chon", 8,"tel_aviv",2,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("dan bark", 8,"afola",2,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("ran bark", 8,"afola",2,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("rona bark", 7,"afola",2,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("galit bark", 9,"afola",2,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("tal bark", 9,"afola",2,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("li bark", 9,"afola",2,"yes");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("lital bark", 9,"afola",2,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("yosi levi", 7,"afola",2,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("yosi bark", 7,"afola",2,"no");
+INSERT INTO Students (name,Age,Address_city,classId,VIP) VALUES("yosi barkan", 8,"afola",2,"no");
+
+4.
+
+
+UPDATE Class
+SET Number_Of_Students = (SELECT COUNT(classId) FROM Students WHERE classId=1 GROUP BY classId)
+WHERE Id=1;
+
+
+UPDATE Class
+SET Number_Of_Students = (SELECT COUNT(classId) FROM Students WHERE classId=2 GROUP BY classId)
+WHERE Id=2;
+
+5.
+
+
+UPDATE Class
+SET Number_Of_VIP = (SELECT COUNT(VIP) FROM Students WHERE classId=1 AND VIP="yes" GROUP BY classId)
+
+WHERE Id=1;
+
+
+UPDATE Class
+SET Number_Of_VIP =( SELECT COUNT(VIP) FROM Students WHERE classId=2 AND VIP="yes" GROUP BY classId)
+
+6.
+
+UPDATE Class
+SET Age_Average = (SELECT AVG(Age) FROM Students WHERE classId=1)
+
+WHERE Id=1;
+
+
+UPDATE Class
+SET Age_Average = (SELECT AVG(Age) FROM Students WHERE classId=2)
+
+WHERE Id=2;
+
+7.
+ 
+UPDATE Class SET Most_Popular_City =( SELECT Address_city FROM (SELECT  Address_city,COUNT(Address_city) AS Sum_City FROM Students WHERE classId=1 GROUP BY Address_city )  
+  WHERE Sum_City= (SELECT max(Sum_City) FROM (SELECT  Address_city,COUNT(Address_city) AS Sum_City FROM Students WHERE classId=1 GROUP BY Address_city)) )
+  WHERE Id=1;
+  
+   
+UPDATE Class SET Most_Popular_City =( SELECT Address_city FROM (SELECT  Address_city,COUNT(Address_city) AS Sum_City FROM Students WHERE classId=2 GROUP BY Address_city )  
+  WHERE Sum_City= (SELECT max(Sum_City) FROM (SELECT  Address_city,COUNT(Address_city) AS Sum_City FROM Students WHERE classId=1 GROUP BY Address_city)) )
+  WHERE Id=2;
+  
+  8.
+   
+UPDATE Class
+  SET Oldest_ViP= (SELECT max(Age) FROM Students   WHERE classId=1 )
+  WHERE Id=1;
+  
+   UPDATE Class
+  SET Oldest_ViP= (SELECT max(Age) FROM Students WHERE classId=2)
+  WHERE Id=2;
+9.
+UPDATE Class
+  SET Youngest_VIP= (SELECT min(Age) FROM Students   WHERE classId=1 )
+  WHERE Id=1;
+  
+   UPDATE Class
+  SET Youngest_VIP= (SELECT min(Age) FROM Students WHERE classId=2)
+  WHERE Id=2;
+
+  
